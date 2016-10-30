@@ -1,0 +1,96 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+	<head>		
+		<link rel="icon" href="favicon-small.png" sizes="32x32"> 
+		<link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+		
+		<title>manga</title>
+		<style type="text/css">
+		html { width: 100%; height: 100%; }
+		body { margin: auto ; background: #b2e1ff; /* Old browsers */
+background: -moz-linear-gradient(top,  #b2e1ff 0%, #66b6fc 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b2e1ff), color-stop(100%,#66b6fc)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #b2e1ff 0%,#66b6fc 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #b2e1ff 0%,#66b6fc 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #b2e1ff 0%,#66b6fc 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #b2e1ff 0%,#66b6fc 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b2e1ff', endColorstr='#66b6fc',GradientType=0 ); /* IE6-9 */
+
+ font-family: Arial, Helvetica, sans-serif; font-size: 12px; color: #292929; width: 100%; height:100%; margin: 0; }
+		a, a:link, a:active, a:visited { font-weight: bold; color: #999999; }
+		a:hover { color: #0080FF; }
+		h1 { text-align: center; font-size: 12px; margin: 0; padding: 0; }
+		#awesome { display: none; position: absolute; top: 780px; left: 210px; z-index: 424; }
+		.almosthidden { opacity: 0.2; }
+		
+		@-webkit-keyframes spin {
+		  from {
+			-webkit-transform: rotate(0deg);
+		  }
+		  to {
+			-webkit-transform: rotate(360deg);
+		  }
+		}
+		
+		@-moz-keyframes spin {
+		  from {
+			-moz-transform: rotate(0deg);
+		  }
+		  to {
+			-moz-transform: rotate(360deg);
+		  }
+		}
+		
+		#fond-mangue {
+		  animation-name: spin;
+		  animation-iteration-count: infinite;
+		  animation-timing-function: linear;
+		  animation-duration: 26s;
+		  animation-play-state: running;
+		  
+		  -webkit-animation-name: spin;
+		  -webkit-animation-iteration-count: infinite;
+		  -webkit-animation-timing-function: linear;
+		  -webkit-animation-duration: 26s;
+		  -webkit-animation-play-state: running;
+		  
+		  -moz-animation-name: spin;
+		  -moz-animation-iteration-count: infinite;
+		  -moz-animation-timing-function: linear;
+		  -moz-animation-duration: 26s;
+		  -moz-animation-play-state: running;
+		}
+
+
+		</style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	</head>
+	<body>
+		<table width="100%" style="height:100%;">
+			<tr>
+				<td align="center" valign="middle" style="vertical-align: middle; position: relative;">
+					<div style="position: relative; width: 840px; height: 840px; overflow: visible;" id="container">
+					<img id="placeholder" align="middle" style="display: block;" />
+					
+					<script type="text/javascript">
+						document.getElementById('placeholder').style.display='none';
+						// noscript equivalent, but bots see the image
+						// does not wait for jQuery to be loaded to hide the placeholder
+						
+						if(document.body.clientHeight < 870 || document.height < 870) {
+							document.write('<img src="gira.png" alt="République des Mangues" id="fond-mangue" align="middle" style="display: block; position: absolute;" />');
+							document.write('<img src="manga.png" alt="République des Mangues" id="mangue" align="middle" style="display: block; position: absolute;" />');
+							document.getElementById('container').style.width="672px";
+							document.getElementById('container').style.height="672px";
+						} 
+						
+					</script>
+					
+					</div>
+				
+					</div>
+		</table>
+	</body>
+</html>
