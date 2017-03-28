@@ -3,151 +3,187 @@
 <body>
   <style>
 	  body{
-  margin: 0px;
+
+	  
+    @import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300';
+
+*{
+	font-family: 'Source Sans Pro', sans-serif;
+	box-sizing: border-box;
+	font-weight: 300;
+	padding: 0;
+	margin: 0;
 }
 
-.background-container{
-  position: relative;
+.btn-wrapper{
+	position: fixed;
+	top: calc(50% - 22px);
+	left: 0;
+	width: 100%;
+	text-align: center;
 }
 
-.background-1{
-  position: absolute;
-  opacity: 0.5;
-  z-index: 1;
-}
-
-.background-2{
-  position: absolute;
-  opacity: 1;
-  z-index: 0;
-}
+.btn{
+	display: inline-block;
+	box-shadow: none;
+	appearance: none;
+	border: 0;
+	outline: 0;
+	background-color: rgb(0, 240, 168);
+	height: 45px;
+	line-height: 42px;
+	padding: 0 30px;
+	font-size: 20px;
+	border-radius: 30px;
+	color: rgb(40, 45, 50);
+	cursor: pointer;
+	transition: all .5s;
+	transition-timing-function: cubic-bezier(.2, 3, .4, 1);
+	user-select: none;
 	
+	&:hover{
+		transform: scale(1.1, 1.1);
+	}
+	
+	&:active{
+		transform: scale(1.05, 1.05);
+	}
+}
   </style>
 <title>TESTE</title>
-	 <div id="#background-container" class="background-container">
-   <div id="background-1" class="background-1"></div>
-   <div id="background-2" class="background-2"></div>
+	
+
+  <div class="btn-wrapper">
+	<button type="button" class="btn">Clique aqui</button>
 </div>
+<canvas id="canvas"></canvas>
 
- 
-	<script>
-		// First attempt at creating a changing and fading multi-layered background.
-// Used here : http://billsearle.me
+	  <script>
+    var c = document.getElementById('canvas');
+var ctx = c.getContext('2d');
+var btn = document.getElementsByClassName('btn')[0];
 
-$(document).ready(function(){
-	// set #background-* to full window height and fade in the body
-	var width = $(window).width();
-	var height = $(window).height();
-		$('#background-container, #background-1, #background-2').css({
-			'min-width': width,
-			'min-height': height
-		});
+c.width = window.innerWidth;
+c.height = window.innerHeight;
 
-	// call new svg and start recreate svg timeout
-	svgNew();
-	recreateSvg();
+var mouseX = c.width / 2;
+var mouseY = c.height / 2;
+var txtPosition = 0;
+
+var particles = [];
+
+btn.addEventListener('mouseup', function(e){
+	mouseX = e.clientX;
+	mouseY = e.clientY;
+	
+	createParticles();
+	changeText();
 });
 
-// set global svg object
-var svg = {};
-// used to determine which background to draw to
-var draw = 1;
-// create new svg 
-var svgNew = function(){
-	svg.t = new Trianglify({
-		noiseIntensity: 0,
-	});
-	// set svg size to window height and width
-	svg.width = $(window).width();
-	svg.height = $(window).height();
-	svg.pattern = svg.t.generate(svg.width, svg.height);
-	// draw svg on to either background 1 or 2
-	if (draw === 1) {
-		svgDraw1();
-	} else {
-		svgDraw2();
+setTimeout(function(){
+	createParticles();
+}, 250);
+
+draw();
+
+function draw(){
+	
+	drawBg();
+	incParticles();
+	drawParticles();
+	
+	window.requestAnimationFrame(draw);
+	
+}
+
+function drawBg(){
+	ctx.rect(0, 0, c.width, c.height);
+	ctx.fillStyle = "rgb(40, 45, 50)";
+	ctx.fill();
+}
+
+function drawParticles(){
+	for(i = 0; i < particles.length; i++){
+		ctx.beginPath();
+		ctx.arc(particles[i].x,
+					 particles[i].y,
+					 particles[i].size,
+					 0,
+					 Math.PI * 2);
+		ctx.fillStyle = particles[i].color;
+		ctx.closePath();
+		ctx.fill();
 	}
-}; // end svgNew
+}
 
-// draw svg on to bg1 and call fade
-// if called with resize, redraw the svg to match new size and do not call fade
-var svgDraw1 = function (resize){
-	draw = 2;
-	if (resize === 'resize') {	
-		svg.pattern = svg.t.generate(svg.width, svg.height);
-		$('#background-1').css({
-			'min-width': svg.width,
-			'min-height': svg.height,
-			'background': svg.pattern.dataUrl
-		});
-		$('#contact-background-1').css({
-			'min-width': svg.width,
-			'min-height': (svg.height / 2),
-			'background': svg.pattern.dataUrl
-		});
-	} else {
-		$('.background-1').css({
-			'background': svg.pattern.dataUrl
-		});
-		fade1();
+function incParticles(){
+	for(i = 0; i < particles.length; i++){
+		particles[i].x += particles[i].velX;
+		particles[i].y += particles[i].velY;
+		
+		particles[i].size = Math.max(0, (particles[i].size - .05));
+		
+		if(particles[i].size === 0){
+			particles.splice(i, 1);
+		}
 	}
-}; // end svgDraw1
+}
 
-// same as above but for bg2
-var svgDraw2 = function(resize){
-	draw = 1;
-	if (resize === 'resize') {	
-		svg.pattern = svg.t.generate(svg.width, svg.height);
-		$('#background-2').css({
-			'min-width': svg.width,
-			'min-height': svg.height,
-			'background': svg.pattern.dataUrl
+function createParticles(){
+	for(i = 0; i < 30; i++){
+		particles.push({
+			x: mouseX,
+			y: mouseY,
+			size: parseInt(Math.random() * 10),
+			color: 'rgb(' + ranRgb() + ')',
+			velX: ranVel(),
+			velY: ranVel()
 		});
-		$('#contact-background-2').css({
-			'min-width': svg.width,
-			'min-height': (svg.height / 2),
-			'background': svg.pattern.dataUrl
-		});
-	} else {
-		$('.background-2').css({
-			'background': svg.pattern.dataUrl
-		});
-		fade2();
 	}
-}; // end svgDraw2
+}
 
-// fade in bg1 and fade our bg2
-var fade1 = function(){
-	$('.background-1').velocity("fadeIn", { duration: 3000 });
-	$('.background-2').velocity("fadeOut", { duration: 4000 });
-};
-// fade in bg2 and fade out bg1
-var fade2 = function(){
-	$('.background-2').velocity("fadeIn", { duration: 3000 });
-	$('.background-1').velocity("fadeOut", { duration: 4000 });
-};
+function ranRgb(){
+	var colors = [
+		'255, 122, 206',
+		'0, 157, 255',
+		'0, 240, 168',
+		'0, 240, 120'
+	];
+	
+	var i = parseInt(Math.random() * 10);
+	
+	return colors[i];
+}
 
-// timeout function to create new svg every 5 seconds
-var recreateSvg = function(){
- 	window.setInterval(svgNew, 5000);
-};
+function ranVel(){
+	var vel = 0;
+	
+	if(Math.random() < 0.5){
+		vel = Math.abs(Math.random());
+	} else {
+		vel = -Math.abs(Math.random());
+	}
+			
+	return vel;
+}
 
-// redraw the current svg to match screen size on resize
-$(window).resize(function() {
-	svg.width = $(window).width();
-	svg.height = $(window).height();
-	$('#background-container').css({
-		'min-width': svg.width,
-		'min-height': svg.height
-	});
-	$('#contact-container').css({
-		'min-width': svg.width,
-		'min-height': (svg.height / 2)
-	});
-	svgDraw1('resize');
-	svgDraw2('resize');
-});
-	</script>
-	 
+// Text
+
+var btnTxt = [
+	'hehe',
+	'OLAR!',
+	'EDUARDO SLOMPO',
+	'IHAAA',
+	'oooooh',
+	'ooooooooooh',
+];
+
+function changeText(){
+	if(txtPosition !== btnTxt.length){
+		btn.innerHTML = btnTxt[txtPosition];
+		txtPosition += 1;
+	}
+}
+  </script>
 </body>
 </html>
